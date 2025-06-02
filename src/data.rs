@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 use serde_json::from_str;
+
 use std::{collections::HashMap, error::Error, fs::File, io::Read};
 
-pub const WORDS_PATH: &str = "./words.json";
-pub const WORDS_SAVED_PATH: &str = "./words_saved.json";
+use crate::utils::get_path_src;
+
+pub const WORDS_PATH: &str = "words.json";
+pub const WORDS_SAVED_PATH: &str = "words_saved.json";
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Data(pub HashMap<String, usize>);
@@ -36,7 +39,7 @@ impl Data {
     }
 
     fn from_path(path: &str) -> Result<Self, Box<dyn Error>> {
-        let mut reader = File::open(path)?;
+        let mut reader = File::open(get_path_src(path.to_string()))?;
         let mut json_str = String::new();
 
         let _ = reader.read_to_string(&mut json_str)?;
@@ -48,7 +51,7 @@ impl Data {
             Some(p) => p,
             None => WORDS_SAVED_PATH,
         };
-        let writer = File::create(path);
+        let writer = File::create(get_path_src(path.to_string()));
 
         if let Ok(writer) = writer {
             let _ = serde_json::to_writer_pretty(writer, &self);
@@ -56,7 +59,7 @@ impl Data {
     }
 
     pub fn load(path: &str) -> Result<Self, Box<dyn Error>> {
-        let mut reader = File::open(path)?;
+        let mut reader = File::open(get_path_src(path.to_string()))?;
 
         let mut data = String::new();
         let _ = reader

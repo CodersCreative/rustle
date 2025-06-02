@@ -1,4 +1,5 @@
 pub mod data;
+pub mod utils;
 
 use data::Data;
 use thiserror::Error as TError;
