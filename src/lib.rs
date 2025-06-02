@@ -101,6 +101,10 @@ impl Board {
         board
     }
 
+    pub fn reset(&mut self) {
+        self.reset_with_word(self.data.get_random_word(self.word.len()));
+    }
+
     pub fn reset_with_word(&mut self, word: String) {
         self.data.0.insert(word.clone(), 1);
         self.word = word;
@@ -114,15 +118,7 @@ impl Board {
     }
 
     pub fn reset_with_length(&mut self, len: usize) {
-        let word = self
-            .data
-            .0
-            .iter()
-            .filter(|(k, _)| k.len() == len)
-            .nth(rand::random_range(0..len))
-            .unwrap()
-            .0
-            .to_string();
+        let word = self.data.get_random_word(len);
         self.word = word;
         self.guesses.clear();
     }

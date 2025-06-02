@@ -20,6 +20,17 @@ impl Default for Data {
 }
 
 impl Data {
+    pub fn get_random_word(&self, len: usize) -> String {
+        return self
+            .0
+            .iter()
+            .filter(|(k, _)| k.len() == len)
+            .nth(rand::random_range(0..len))
+            .unwrap()
+            .0
+            .to_string();
+    }
+
     fn from_json(json_str: &str) -> Result<Self, Box<dyn Error>> {
         Ok(Self(from_str(json_str)?))
     }
