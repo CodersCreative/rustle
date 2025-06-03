@@ -8,12 +8,11 @@ use crate::utils::get_path_src;
 pub const WORDS_PATH: &str = "words.json";
 pub const WORDS_SAVED_PATH: &str = "words_saved.json";
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Data(pub HashMap<String, usize>);
 
 impl Default for Data {
     fn default() -> Self {
-        // return Self(WORDS);
         if let Ok(data) = Self::load(WORDS_SAVED_PATH) {
             data
         } else {

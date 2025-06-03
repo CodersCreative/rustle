@@ -1,13 +1,16 @@
 pub mod data;
 pub mod utils;
 
+use std::rc::Rc;
+
 use data::Data;
 use thiserror::Error as TError;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Board {
     pub guesses: Vec<String>,
     pub word: String,
-    pub data: Data,
+    pub data: Rc<Data>,
 }
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
@@ -91,7 +94,7 @@ impl Board {
         let data: Data = Data::default();
         Self {
             guesses: Vec::new(),
-            data,
+            data: Rc::new(data),
             word: String::new(),
         }
     }
@@ -107,7 +110,6 @@ impl Board {
     }
 
     pub fn reset_with_word(&mut self, word: String) {
-        self.data.0.insert(word.clone(), 1);
         self.word = word;
         self.guesses.clear();
     }
