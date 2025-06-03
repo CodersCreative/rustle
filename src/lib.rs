@@ -13,15 +13,17 @@ pub struct Board {
     pub data: Rc<Data>,
 }
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub enum CharacterState {
     Correct,
     WrongPosition,
     NotFound,
 }
 
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct BoardStateCharacter(pub char, pub CharacterState);
 
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct BoardState(pub Vec<Vec<BoardStateCharacter>>);
 
 pub trait WinTrait {
