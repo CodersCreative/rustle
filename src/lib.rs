@@ -21,7 +21,7 @@ pub enum CharacterState {
 }
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
-pub struct BoardStateCharacter(pub char, pub CharacterState);
+pub struct BoardStateCharacter(pub char, pub Option<CharacterState>);
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct BoardState(pub Vec<Vec<BoardStateCharacter>>);
@@ -35,7 +35,7 @@ impl WinTrait for BoardState {
         for guess in &self.0 {
             let mut failed = false;
             for character in guess {
-                if character.1 != CharacterState::Correct {
+                if character.1 != Some(CharacterState::Correct) {
                     failed = true;
                 }
             }
@@ -76,7 +76,7 @@ impl Into<BoardState> for &Board {
                                 CharacterState::NotFound
                             };
 
-                            BoardStateCharacter(character, state)
+                            BoardStateCharacter(character, Some(state))
                         })
                         .collect()
                 })
@@ -99,6 +99,17 @@ impl Board {
             data: Rc::new(data),
             word: String::new(),
         }
+    }
+
+    pub fn get_key_state(&self, c : char) -> BoardStateCharacter{
+        for guess in self.guesses{
+            if guess.contains(c){
+                for attempt in guess.chars().filter(|x| x == &c){
+                }
+            }
+        }
+
+        None
     }
 
     pub fn new_with_word(word: String) -> Self {
