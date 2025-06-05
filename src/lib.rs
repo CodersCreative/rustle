@@ -101,15 +101,21 @@ impl Board {
         }
     }
 
-    pub fn get_key_state(&self, c : char) -> BoardStateCharacter{
-        for guess in self.guesses{
-            if guess.contains(c){
-                for attempt in guess.chars().filter(|x| x == &c){
+    pub fn get_key_state(&self, c: char) -> Option<CharacterState> {
+        let mut best = None;
+        for guess in self.get_state().0 {
+            for c in guess.iter().filter(|x| x.0 == c) {
+                match c.1 {
+                    Some(CharacterState::Correct) | Some(CharacterState::NotFound) => {
+                        return c.1.clone();
+                    }
+                    Some(CharacterState::WrongPosition) => best = c.1.clone(),
+                    _ => {}
                 }
             }
         }
 
-        None
+        best
     }
 
     pub fn new_with_word(word: String) -> Self {
