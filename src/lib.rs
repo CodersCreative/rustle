@@ -104,7 +104,7 @@ impl Board {
     pub fn get_key_state(&self, c: char) -> Option<CharacterState> {
         let mut best = None;
         for guess in self.get_state().0 {
-            for c in guess.iter().filter(|x| x.0 == c) {
+            for c in guess.iter().filter(|x| x.0 == c.to_ascii_lowercase()) {
                 match c.1 {
                     Some(CharacterState::Correct) | Some(CharacterState::NotFound) => {
                         return c.1.clone();
@@ -129,7 +129,7 @@ impl Board {
     }
 
     pub fn reset_with_word(&mut self, word: String) {
-        self.word = word;
+        self.word = word.to_lowercase();
         self.guesses.clear();
     }
 
@@ -151,9 +151,9 @@ impl Board {
 
     pub fn add_guess<T: Into<String>>(&mut self, input: T) -> Result<(), GuessError> {
         let input: String = input.into();
-        if let Some(_) = self.data.0.get(&input) {
+        if let Some(_) = self.data.0.get(&input.to_lowercase()) {
             if input.len() == self.word.len() {
-                self.guesses.push(input);
+                self.guesses.push(input.to_lowercase());
             } else {
                 return Err(GuessError::WrongSize);
             }
