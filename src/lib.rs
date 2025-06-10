@@ -1,9 +1,8 @@
 pub mod data;
 pub mod utils;
 
-use std::rc::Rc;
-
 use data::Data;
+use std::rc::Rc;
 use thiserror::Error as TError;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -99,6 +98,41 @@ impl Board {
             data: Rc::new(data),
             word: String::new(),
         }
+    }
+
+    pub fn get_view_state(&self, input: &str) -> Vec<Vec<BoardStateCharacter>> {
+        let mut state = self.get_state().0;
+
+        let word_len = self.word.len();
+
+        state.push(
+            input
+                .chars()
+                .into_iter()
+                .map(|c| BoardStateCharacter(c, None))
+                .collect(),
+        );
+
+        if let Some(correction) = word_len.checked_sub(input.len()) {
+            if let Some(last) = state.last_mut() {
+                (0..correction)
+                    .into_iter()
+                    .for_each(|_| last.push(BoardStateCharacter(' ', None)));
+            }
+        }
+
+        if let Some(correction) = 5_usize.checked_sub(state.len()) {
+            (0..correction).into_iter().for_each(|_| {
+                state.push(
+                    (0..word_len)
+                        .into_iter()
+                        .map(|_| BoardStateCharacter(' ', None))
+                        .collect(),
+                );
+            });
+        }
+
+        state
     }
 
     pub fn get_key_state(&self, c: char) -> Option<CharacterState> {
